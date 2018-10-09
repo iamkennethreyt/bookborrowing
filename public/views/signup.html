@@ -1,0 +1,18 @@
+<div class="container">
+    <form class="text-center border border-light p-5" ng-submit="signup()">
+        <p class="h4 mb-4">Sign up</p>
+        <P>{{helloWorld}}</P>
+        <div class="form-row mb-4">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="First name" ng-model="firstName">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Last name" ng-model="lastName">
+            </div>
+        </div>
+        <input type="email" class="form-control mb-4" placeholder="E-mail" ng-model="email">
+        <input type="password" class="form-control mb-4" placeholder="Password" ng-model="password">
+        <input type="password" class="form-control" placeholder="Confirm Password" ng-model="confirmPassword">
+        <button class="btn btn-info my-4 btn-block" type="submit">Sign in</button>
+    </form>
+</div>
