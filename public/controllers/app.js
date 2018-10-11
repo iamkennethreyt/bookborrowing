@@ -13,5 +13,9 @@ app.config(function($routeProvider) {
       templateUrl: "../views/signin.html",
       controller: "appController"
     })
+    .when("/profile", {
+      templateUrl: "../views/profile.html",
+      controller: "appController"
+    })
     .otherwise("/");
 });

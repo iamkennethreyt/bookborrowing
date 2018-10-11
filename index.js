@@ -32,9 +32,9 @@ app.post("/api/registerUser", (req, res) => {
                   "${req.body.lastName}",
                   "${req.body.password}",
                   "${req.body.email}")`,
-        error =>
+        (error, results) =>
           !error
-            ? res.send("SUCCESSFULLY REGISTERED")
+            ? res.send(results.insertId.toString())
             : res.send(
                 `${
                   req.body.email
@@ -51,6 +51,77 @@ app.post("/api/registerUser", (req, res) => {
   });
 });
 
+//POST PET
+app.post("/api/postpet", (req, res) => {
+  // const timeofmass = moment(req.body.dateofmass);
+  pool.getConnection((err, connection) => {
+    if (!err) {
+      connection.query(
+        `INSERT INTO
+          posts(userID, title, details, image, timepost)
+          VALUES( "${req.body.ID}",
+                  "${req.body.title}",
+                  "${req.body.details}",
+                  "${req.body.image}",
+                  "${Date.now()}")`,
+        (error, results) =>
+          !error
+            ? res.send("SUCCESSFULLY POSTED")
+            : res.send("THERE'S SOMETHING WRONG FOR POSTING")
+      );
+      connection.release();
+    } else {
+      res.json("Error connecting to db. " + err);
+      connection.release();
+    }
+  });
+});
+
+// POST LIST
+app.get("/api/postlist", (req, res) => {
+  pool.getConnection((err, connection) => {
+    if (!err) {
+      connection.query(
+        "SELECT u.firstname, u.lastname, u.email, p.title, p.details, p.image FROM users as u, posts as p where p.userid = u.id",
+        (error, results) => {
+          if (!error) {
+            res.json(results);
+            connection.release();
+          }
+        }
+      );
+    } else {
+      connection.release();
+    }
+  });
+});
+
+app.post("/api/updateprofile", (req, res) => {
+  pool.getConnection((err, connection) => {
+    if (!err) {
+      connection.query(
+        `UPDATE users SET
+          firstname="${req.body.firstName}",
+          lastname="${req.body.lastName}",
+          details="${req.body.details}",
+          image="${req.body.image}"
+          WHERE ID="${req.body.ID}"`,
+        err => {
+          if (!err) {
+            // connection.query("SELECT * FROM users", (err, rows) => {
+            res.send("SUCCESSFULLY UPDATED PROFILE");
+            connection.release();
+            // });
+          }
+        }
+      );
+    } else {
+      res.json("Error connecting to db. " + err);
+      connection.release();
+    }
+  });
+});
+
 app.post("/api/signin", (req, res) => {
   pool.getConnection((err, connection) => {
     if (!err) {
@@ -62,11 +133,11 @@ app.post("/api/signin", (req, res) => {
           if (!err) {
             results.length == 0
               ? res.send("INVALID USER NAME OR PASSWORD")
-              : res.redirect();
+              : res.json(results);
+            connection.release();
           }
         }
       );
-      connection.release();
     } else {
       res.json("Error connecting to db. " + err);
       connection.release();

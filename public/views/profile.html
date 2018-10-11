@@ -22,35 +22,55 @@
 
 <style>
     .file-field {
-    position: relative;
-}
-
-.file-field input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-    opacity: 0;
-}
-
-.file-field input.file-path {
-    width: 100%;
-    height: 36px;
-}
-
-
-</style>
+        position: relative;
+    }
+    
+    .file-field input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        opacity: 0;
+    }
+    
+    .file-field input.file-path {
+        width: 100%;
+        height: 36px;
+    }
+    
+    
+    </style>
 
 
 
 
 <section class="my-5">
     <div class="container">
+        <div>
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="view overlay rounded z-depth-2 mb-lg-0 mb-4">
+                        <img class="img-fluid" src="./images/user.png" alt="Sample image">
+                        <a>
+                            <div class="mask rgba-white-slight"></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <h3 class="font-weight-bold mb-3"><strong>{{user.firstName}} {{user.lastName}}</strong></h3>
+                    <p>{{user.details}}</p>
+                    <p class="m-0">email: <strong class="text-primary">{{user.email}}</strong></p>
+                    <a class="btn btn-success btn-md" data-toggle="modal" data-target="#editprofile" ng-click="editprofile()">Edit
+                        Profile</a>
+                </div>
+            </div>
+            <hr class="my-5">
+        </div>
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-8 col-xs-12">
                 <!-- Search form -->
@@ -58,35 +78,6 @@
                     <input class="form-control" type="text" placeholder="Search" aria-label="Search">
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-8 col-xs-12">
-                <div class="text-right">
-                    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalLoginForm">
-                        Add Post</a>
-                </div>
-            </div>
-        </div>
-        <div ng-repeat="item in posts">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="view overlay rounded z-depth-2 mb-lg-0 mb-4">
-                        <img class="img-fluid" src="./images/{{item.image}}" alt="Sample image">
-                        <a>
-                            <div class="mask rgba-white-slight"></div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-9">
-                    <a href="#!" class="green-text">
-                        <h6 class="font-weight-bold mb-3"><i class="fa fa-cutlery pr-2"></i>Food</h6>
-                    </a>
-                    <h3 class="font-weight-bold mb-3"><strong>{{item.title}}</strong></h3>
-                    <p>{{item.details}}</p>
-                    <p class="m-0">by <a><strong>{{item.firstname}}{{item.lastname}}</strong></a></p>
-                    <p class="m-0">email: <strong class="text-primary">{{item.email}}</strong></p>
-                    <a class="btn btn-success btn-md">Read more</a>
-                </div>
-            </div>
-            <hr class="my-5">
         </div>
     </div>
 </section>
@@ -101,24 +92,29 @@
 
 
 
-<div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="editprofile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form class="modal-content" id="form" ng-submit="post()">
+        <form class="modal-content" ng-submit="submiteditedprofile()">
             <div class="modal-header text-center">
-                <h4 class="modal-title w-100 font-weight-bold">Post Pet</h4>
+                <h4 class="modal-title w-100 font-weight-bold">Edit Profile</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn-close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body mx-3">
                 <div class="md-form mb-5">
-                    <input type="text" id="defaultForm-email" class="form-control validate" ng-model="title">
-                    <label data-error="wrong" data-success="right" for="defaultForm-email">Title of you Post</label>
+                    <input type="text" id="defaultForm-email" class="form-control validate" ng-model="firstName"
+                        placeholder="First Name">
+                </div>
+                <div class="md-form mb-5">
+                    <input type="text" id="defaultForm-email" class="form-control validate" ng-model="lastName"
+                        placeholder="Last Name">
                 </div>
 
-                <div class="md-form">
+                <div class="
+                        md-form">
                     <textarea type="text" id="textareaBasic" class="form-control md-textarea" rows="3" ng-model="details"></textarea>
-                    <label for="textareaBasic">Details</label>
+                    <label for="textareaBasic">Profile Details</label>
                 </div>
 
                 <!-- <div class="md-form"> -->
