@@ -1,0 +1,89 @@
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-lg-3 col-md-4">
+            <ul class="list-group">
+                <a href="/#!/dashboardbooklist" class="text-secondary">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">BOOK
+                        LIST<span class="badge badge-secondary badge-pill">{{countbooks}}</span></li>
+                </a>
+                <a href="/#!/dashboardmanagebook" class="text-white">
+                    <li class="list-group-item d-flex justify-content-between align-items-center secondary-color-dark">MANAGE
+                        BOOKS<span class="badge badge-secondary badge-pill">{{countmanagebook}}</span></li>
+                </a>
+                <a href="/#!/dashboardmanageborrower" class="text-secondary">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">MANAGE BORROWERS<span
+                            class="badge badge-secondary badge-pill">{{countborrowers}}</span></li>
+                </a>
+                <a ng-click="onSignOut()" class="text-secondary">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">SIGN OUT</li>
+                </a>
+            </ul>
+        </div>
+        <div class="col-lg-9 col-md-8">
+            <div class="text-right">
+                <button class="btn secondary-color-dark" data-toggle="modal" data-target="#modalAddBook">Add</button>
+            </div>
+
+            <table class="table  text-center">
+                <thead class="black secondary-color-dark white-text">
+                    <tr>
+                        <th scope="col">Book Name</th>
+                        <th scope="col">Borrower's Name</th>
+                        <th scope="col">Date Borrow</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="bookborrower in bookborrowers">
+                        <td class="text-left">{{bookborrower.title}}</td>
+                        <td>{{bookborrower.firstname}} {{bookborrower.lastname}}</td>
+                        <td>{{bookborrower.dateborrow}}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" ng-click="onArchive(bookborrower.id)">Archive</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalAddBook" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">Manage Book Borrowers</h4>
+                <button type="button" class="close" id="btn-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form ng-submit="managebookborrower()" id="form">
+                <div class="modal-body mx-3">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="bookname">Book Name</label>
+                        </div>
+                        <select class="custom-select" id="bookname" ng-model="bookID">
+                            <option selected>Choose...</option>
+                            <option ng-repeat="book in books" value="{{book.ID}}">{{book.title}}</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="borrowersname">Borrower's Name</label>
+                        </div>
+                        <select class="custom-select" id="borrowersname" ng-model="borrowerID">
+                            <option selected>Choose...</option>
+                            <option ng-repeat="borrower in borrowers" value="{{borrower.ID}}">{{borrower.firstname}}
+                                {{borrower.lastname}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button class="btn btn-secondary" type="submit">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

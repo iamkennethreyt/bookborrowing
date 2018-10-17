@@ -15,134 +15,214 @@ const pool = mysql.createPool({
   port: 3306,
   user: "root",
   password: "",
-  database: "wakin",
+  database: "shy",
   debug: false
 });
 
+const d = new Date();
+
 app.use(express.static(__dirname + "/public"));
 
-//REGISTER USER
-app.post("/api/registerUser", (req, res) => {
+// BOOK LIST
+app.get("/api/booklist", (req, res) => {
   pool.getConnection((err, connection) => {
-    if (!err) {
-      connection.query(
-        `INSERT INTO
-          users(firstName, lastName, password, email)
-          VALUES( "${req.body.firstName}",
-                  "${req.body.lastName}",
-                  "${req.body.password}",
-                  "${req.body.email}")`,
-        (error, results) =>
-          !error
-            ? res.send(results.insertId.toString())
-            : res.send(
-                `${
-                  req.body.email
-                } IS ALREADY REGISTERD PLEASE USE ANOTHER EMAIL TO SIGNUP`
-              )
-      );
-      connection.release();
-      // connection.destroy();
-    } else {
-      res.json("Error connecting to db. " + err);
-      connection.release();
-      // connection.destroy();
-    }
+    connection.query(
+      "SELECT * from books ORDER by id desc",
+      (error, results) => {
+        res.json(results);
+        connection.release();
+        connection.destroy();
+      }
+    );
   });
 });
 
-//POST PET
-app.post("/api/postpet", (req, res) => {
-  // const timeofmass = moment(req.body.dateofmass);
+// BORROWERS LIST
+app.get("/api/borrowerslist", (req, res) => {
   pool.getConnection((err, connection) => {
-    if (!err) {
-      connection.query(
-        `INSERT INTO
-          posts(userID, title, details, image, timepost)
-          VALUES( "${req.body.ID}",
-                  "${req.body.title}",
-                  "${req.body.details}",
-                  "${req.body.image}",
-                  "${Date.now()}")`,
-        (error, results) =>
-          !error
-            ? res.send("SUCCESSFULLY POSTED")
-            : res.send("THERE'S SOMETHING WRONG FOR POSTING")
-      );
-      connection.release();
-    } else {
-      res.json("Error connecting to db. " + err);
-      connection.release();
-    }
+    connection.query(
+      "SELECT * from borrowers ORDER by id desc",
+      (error, results) => {
+        res.json(results);
+        connection.release();
+        connection.destroy();
+      }
+    );
   });
 });
 
-// POST LIST
-app.get("/api/postlist", (req, res) => {
+//ADD BOOK
+app.post("/api/addbook", (req, res) => {
   pool.getConnection((err, connection) => {
-    if (!err) {
-      connection.query(
-        "SELECT u.firstname, u.lastname, u.email, p.title, p.details, p.image FROM users as u, posts as p where p.userid = u.id",
-        (error, results) => {
-          if (!error) {
-            res.json(results);
-            connection.release();
-          }
-        }
-      );
-    } else {
-      connection.release();
-    }
+    connection.query(
+      `INSERT INTO
+          books(title, author, qty)
+          VALUES( "${req.body.title}",
+                  "${req.body.author}",
+                  "${req.body.qty}")`,
+      () => {
+        res.send("SUCCESSFULLY POSTED");
+        connection.release();
+        connection.destroy();
+      }
+    );
   });
 });
 
-app.post("/api/updateprofile", (req, res) => {
+//ADD BORROWER
+app.post("/api/addborrower", (req, res) => {
   pool.getConnection((err, connection) => {
-    if (!err) {
-      connection.query(
-        `UPDATE users SET
-          firstname="${req.body.firstName}",
-          lastname="${req.body.lastName}",
-          details="${req.body.details}",
-          image="${req.body.image}"
-          WHERE ID="${req.body.ID}"`,
-        err => {
-          if (!err) {
-            // connection.query("SELECT * FROM users", (err, rows) => {
-            res.send("SUCCESSFULLY UPDATED PROFILE");
-            connection.release();
-            // });
-          }
-        }
-      );
-    } else {
-      res.json("Error connecting to db. " + err);
-      connection.release();
-    }
+    connection.query(
+      `INSERT INTO
+          borrowers(firstname, lastname, address, profession)
+          VALUES( "${req.body.firstname}",
+                  "${req.body.lastname}",
+                  "${req.body.address}",
+                  "${req.body.profession}")`,
+      () => {
+        res.send("SUCCESSFULLY POSTED");
+        connection.release();
+        connection.destroy();
+      }
+    );
   });
 });
 
+//API FOR SIGNIN
 app.post("/api/signin", (req, res) => {
   pool.getConnection((err, connection) => {
-    if (!err) {
-      connection.query(
-        `select * from users where email="${req.body.email}" and password="${
-          req.body.password
-        }"`,
-        (err, results) => {
-          if (!err) {
-            results.length == 0
-              ? res.send("INVALID USER NAME OR PASSWORD")
-              : res.json(results);
-            connection.release();
-          }
+    connection.query(
+      `select * from users where username="${
+        req.body.username
+      }" and password="${req.body.password}"`,
+      (err, results) => {
+        if (results.length !== 0) {
+          instance = results[0];
+          res.send("SUCCESSFULLY LOGIN");
+        } else {
+          res.send("INVALID USERNAME OR PASSWORD");
         }
-      );
-    } else {
-      res.json("Error connecting to db. " + err);
-      connection.release();
-    }
+        connection.release();
+        connection.destroy();
+      }
+    );
   });
+});
+
+//UPDATE BOOK
+app.post("/api/updatebook", (req, res) => {
+  pool.getConnection((err, connection) => {
+    connection.query(
+      `UPDATE books SET
+        title="${req.body.title}",
+        author="${req.body.author}",
+        qty="${req.body.qty}"
+        WHERE ID="${req.body.ID}"`,
+      () => {
+        res.send("SUCCESSFULLY UPDATED POST");
+        connection.release();
+        connection.destroy();
+      }
+    );
+  });
+});
+
+//UPDATE BOOK
+app.post("/api/updateborrower", (req, res) => {
+  pool.getConnection((err, connection) => {
+    connection.query(
+      `UPDATE borrowers SET
+        firstname="${req.body.firstname}",
+        lastname="${req.body.lastname}",
+        profession="${req.body.profession}",
+        address="${req.body.address}"
+        WHERE ID="${req.body.ID}"`,
+      () => {
+        res.send("SUCCESSFULLY UPDATED POST");
+        connection.release();
+        connection.destroy();
+      }
+    );
+  });
+});
+
+//API FOR DELETE BOOK
+app.post("/api/deletebook", (req, res) => {
+  pool.getConnection((err, connection) => {
+    connection.query(`DELETE FROM books WHERE id = "${req.body.ID}"`, () => {
+      res.send("SUCCESSFULLY DELETED BOOK");
+      connection.release();
+      connection.destroy();
+    });
+  });
+});
+
+//API FOR DELETE BORROWER
+app.post("/api/deleteborrower", (req, res) => {
+  pool.getConnection((err, connection) => {
+    connection.query(
+      `DELETE FROM borrowers WHERE id = "${req.body.ID}"`,
+      () => {
+        res.send("SUCCESSFULLY DELETED BORROWER");
+        connection.release();
+        connection.destroy();
+      }
+    );
+  });
+});
+
+app.get("/api/readmanagebookborrowers", (req, res) => {
+  pool.getConnection((err, connection) => {
+    connection.query(
+      `SELECT
+        z.id, x.firstname, x.lastname, y.title, z.dateborrow
+      from
+        managebookborrowers as z, borrowers as x, books as y
+      where z.borrowerID = x.id and z.bookID = y.ID and z.status="active"
+      ORDER by id desc`,
+      (error, results) => {
+        res.json(results);
+        connection.release();
+        connection.destroy();
+      }
+    );
+  });
+});
+
+//ADD BOOK BORROWER
+app.post("/api/managebookborrower", (req, res) => {
+  pool.getConnection((err, connection) => {
+    connection.query(
+      `INSERT INTO
+          managebookborrowers(bookID, borrowerID, dateborrow, status)
+          VALUES( "${req.body.bookID}",
+                  "${req.body.borrowerID}",
+                  "${d.getMonth()}/${d.getDate()}/${d.getFullYear()}",
+                  "active")`,
+      () => {
+        res.send("SUCCESSFULLY POSTED");
+        connection.release();
+        connection.destroy();
+      }
+    );
+  });
+});
+
+//ARCHIVE BOOK BORROWER
+app.post("/api/archive", (req, res) => {
+  pool.getConnection((err, connection) => {
+    connection.query(
+      `UPDATE managebookborrowers SET
+        status="inactive"
+        WHERE ID="${req.body.id}"`,
+      () => {
+        res.send("SUCCESSFULLY ARCHIVE DATA");
+        connection.release();
+        connection.destroy();
+      }
+    );
+  });
+  console.log("requeired", req.body.id);
 });
 
 app.get("*", (req, res) => res.send("./public/index.html"));

@@ -1,0 +1,124 @@
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-lg-3 col-md-4">
+            <ul class="list-group">
+                <a href="/#!/dashboardbooklist" class="text-secondary">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">BOOK
+                        LIST<span class="badge badge-secondary badge-pill">{{countbooks}}</span></li>
+                </a>
+                <a href="/#!/dashboardmanagebook" class="text-secondary">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">MANAGE BOOKS<span
+                            class="badge badge-secondary badge-pill">{{countmanagebook}}</span></li>
+                </a>
+                <a href="/#!/dashboardmanageborrower" class="text-white">
+                    <li class="list-group-item d-flex justify-content-between align-items-center secondary-color-dark">MANAGE
+                        BORROWERS<span class="badge badge-secondary badge-pill">{{countborrowers}}</span></li>
+                </a>
+                <a ng-click="onSignOut()" class="text-secondary">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">SIGN OUT</li>
+                </a>
+            </ul>
+        </div>
+        <div class="col-lg-9 col-md-8">
+            <div class="text-right">
+                <button class="btn secondary-color-dark" data-toggle="modal" data-target="#modalAddBorrower">Add</button>
+            </div>
+
+            <table class="table">
+                <thead class="black secondary-color-dark white-text">
+                    <tr class="text-center">
+                        <th scope="col">#</th>
+                        <th scope="col" class="text-center">Name</th>
+                        <th scope="col">Proffesion</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="borrower in borrowers">
+                        <th scope="row">{{borrower.key}}</th>
+                        <td>{{borrower.firstname}} {{borrower.lastname}}</td>
+                        <td>{{borrower.profession}}</td>
+                        <td class="text-center">{{borrower.address}}</td>
+                        <td>
+                            <div class="btn-group mr-2">
+                                <button class="btn btn-primary btn-sm" ng-click="onUpdateBorrower(borrower)"
+                                    data-toggle="modal" data-target="#modalUpdateBorrower">UPDATE</button>
+                                <button class="btn btn-danger btn-sm" ng-click="onDeleteBorrower(borrower)">DELETE</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAddBorrower" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">Add New Borrower</h4>
+                <button type="button" class="close" id="btn-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form ng-submit="addborrower()" id="form">
+                <div class="modal-body mx-3">
+                    <div class="md-form mb-5">
+                        <input type="text" id="orangeForm-firstname" class="form-control validate" ng-model="firstname">
+                        <label data-error="wrong" data-success="right" for="orangeForm-firstname">First Name</label>
+                    </div>
+                    <div class="md-form mb-5">
+                        <input type="text" id="orangeForm-lastname" class="form-control validate" ng-model="lastname">
+                        <label data-error="wrong" data-success="right" for="orangeForm-lastname">Last Name</label>
+                    </div>
+                    <div class="md-form mb-5">
+                        <input type="text" id="orangeForm-profession" class="form-control validate" ng-model="profession">
+                        <label data-error="wrong" data-success="right" for="orangeForm-profession">Profession</label>
+                    </div>
+                    <div class="md-form ">
+                        <textarea type="text" id="textareaBasic" class="form-control md-textarea" rows="3" ng-model="address"></textarea>
+                        <label for="textareaBasic">Address</label>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button class="btn btn-secondary" type="submit">Add New Borrower</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalUpdateBorrower" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">Update Borrower</h4>
+                <button type="button" class="close" id="btn-close2" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form ng-submit="updateborrower()" id="form2">
+                <div class="modal-body mx-3">
+                    <div class="md-form mb-5">
+                        <input type="text" placeholder="First Name" class="form-control validate" ng-model="firstname">
+                    </div>
+                    <div class="md-form mb-5">
+                        <input type="text" placeholder="Last Name" class="form-control validate" ng-model="lastname">
+                    </div>
+                    <div class="md-form mb-5">
+                        <input type="text" placeholder="Profession" class="form-control validate" ng-model="profession">
+                    </div>
+                    <div class="md-form ">
+                        <textarea type="text" placeholder="Address" class="form-control md-textarea" rows="3" ng-model="address"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button class="btn btn-secondary" type="submit">Update Borrower</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

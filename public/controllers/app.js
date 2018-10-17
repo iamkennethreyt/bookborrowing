@@ -5,16 +5,16 @@ app.config(function($routeProvider) {
       templateUrl: "../views/index.html",
       controller: "appController"
     })
-    .when("/signup", {
-      templateUrl: "../views/signup.html",
+    .when("/dashboardbooklist", {
+      templateUrl: "../views/dashboardbooklist.html",
       controller: "appController"
     })
-    .when("/signin", {
-      templateUrl: "../views/signin.html",
+    .when("/dashboardmanagebook", {
+      templateUrl: "../views/dashboardmanagebook.html",
       controller: "appController"
     })
-    .when("/profile", {
-      templateUrl: "../views/profile.html",
+    .when("/dashboardmanageborrower", {
+      templateUrl: "../views/dashboardmanageborrower.html",
       controller: "appController"
     })
     .otherwise("/");
